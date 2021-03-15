@@ -9,12 +9,23 @@ import 'package:flutter/material.dart';
 //import 'package:flutter_tts/flutter_tts.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:path_provider/path_provider.dart';
 
 //final _isTtsSupported = kIsWeb || !Platform.isMacOS;
 
 // You might want to provide this using dependency injection rather than a
 // global variable.
 late AudioHandler _audioHandler;
+
+List<MediaItem> playlist = [];
+void _addTracks() async {
+  final directory = await getApplicationDocumentsDirectory();
+
+  playlist.add(
+    MediaItem(
+        id: '${directory.path}/file.mp3', album: 'album', title: 'file.mp3'),
+  );
+}
 
 /// Extension methods for our custom actions.
 extension DemoAudioHandler on AudioHandler {
@@ -25,6 +36,8 @@ extension DemoAudioHandler on AudioHandler {
 }
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  _addTracks();
   _audioHandler = await AudioService.init(
     builder: () => LoggingAudioHandler(MainSwitchHandler([
       AudioPlayerHandler(),
@@ -675,7 +688,7 @@ class AudioPlayerHandler extends BaseAudioHandler
       //await Future.delayed(Duration(seconds: 2)); // magic delay
       await _player.setAudioSource(ConcatenatingAudioSource(
         children: queue.value!
-            .map((item) => AudioSource.uri(Uri.parse(item.id)))
+            .map((item) => AudioSource.uri(Uri.file(item.id)))
             .toList(),
       ));
       print("### loaded");
@@ -784,26 +797,7 @@ class MediaLibrary {
         playable: false,
       ),
     ],
-    albumsRootId: [
-      MediaItem(
-        id: "https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3",
-        album: "Science Friday",
-        title: "A Salute To Head-Scratching Science",
-        artist: "Science Friday and WNYC Studios",
-        duration: Duration(milliseconds: 5739820),
-        artUri: Uri.parse(
-            "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),
-      ),
-      MediaItem(
-        id: "https://s3.amazonaws.com/scifri-segments/scifri201711241.mp3",
-        album: "Science Friday",
-        title: "From Cat Rheology To Operatic Incompetence",
-        artist: "Science Friday and WNYC Studios",
-        duration: Duration(milliseconds: 2856950),
-        artUri: Uri.parse(
-            "https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg"),
-      ),
-    ],
+    albumsRootId: playlist,
   };
 }
 
