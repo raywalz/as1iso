@@ -1,16 +1,3 @@
 # as1iso
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+An example Flutter app that demonstrates playing audio in the background with lockscreen controls from the app's document storage using [the one_isolate branch of audio_service](https://github.com/ryanheise/audio_service), [just_audio](https://github.com/ryanheise/just_audio), and [path_provider](https://github.com/flutter/plugins/tree/master/packages/path_provider/path_provider).
